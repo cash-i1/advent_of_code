@@ -5,71 +5,50 @@ const input = @embedFile("input.txt");
 const Pair = struct {left: ?i32, right: ?i32};
 
 pub fn main() !void {
-    const alloc = std.heap.page_allocator;
+    const alloc = std.heap.c_allocator;
+
+    var current_pair = Pair {.left = null, .right = null};
 
     var pairs = std.ArrayList(Pair).init(alloc);
 
-    var line: i32 = 0;
-    var char: i32 = 0;
+    var in_number = false;
+    var on_left = true;
 
-    var pair = Pair {.left = null, .right = null};
-
-    var last_was_digit = false;
+    // buffer of chars that gets converted into int
     var num_buffer = std.ArrayList(u8).init(alloc);
 
-    var on_left = true;
-    var finished_number = false;
-
     for (input) |c| {
-        if (c == '\n') {
-            on_left = true;
-            char = 0;
-            line += 1;
-
-            try pairs.append(pair);
-            std.debug.print(">>>>>>>>>>>>>>\n", .{});
-            std.debug.print("{?d} : {?d}\n", .{pair.left, pair.right}); 
-            std.debug.print(">>>>>>>>>>>>>>\n", .{});
-
-            pair = Pair {.left = null, .right = null};
-
-            num_buffer.clearAndFree();
-        } else {
-            char += 1;
-        }
-        
-        if (c == ' ') {
-            finished_number = true;
+        if (std.ascii.isDigit(c)) {
+            in_number = true;
+            try num_buffer.append(c);
             continue;
-        }
-        if (finished_number) {
-            last_was_digit = false;
-            finished_number = false;
+        } 
 
-            std.debug.print("num_buffer: ", .{});
-            for (num_buffer.items) |n| {
-                std.debug.print("{c}", .{n});
+        if (in_number) {
+            in_number = false;
+
+            std.debug.print("trying to make this an number: ", .{});
+            for (num_buffer.items) |char| {
+                std.debug.print("{c}", .{char});
             }
             std.debug.print("\n", .{});
 
             const num = try std.fmt.parseInt(i32, num_buffer.items, 10);
+            num_buffer.clearAndFree();
 
             if (on_left) {
-                pair.left = num;
+                current_pair.left = num;
                 on_left = false;
             } else {
-                pair.right = num; 
+                current_pair.right = num; 
+                on_left = true;
             }
-            num_buffer.clearAndFree();
         }
 
-        if (std.ascii.isDigit(c)) {
-            last_was_digit = true;
-            finished_number = false;
-            try num_buffer.append(c);
-        } 
-        std.debug.print("looked at '{c}' ({s})\n", .{c, if (on_left) "left" else "right"});
-
+        if (current_pair.right != null and current_pair.left != null) {
+            try pairs.append(current_pair);
+            current_pair = Pair {.left = null, .right = null};
+        }
     }
 
     std.debug.print("-------------\n", .{});
@@ -77,11 +56,4 @@ pub fn main() !void {
         std.debug.print("{?d} : {?d}\n", .{p.left, p.right}); 
         break;
     }
-
-    // for (left.items) |n| {
-    //     std.debug.print("L: {d}\n", .{n});
-    // }
-    // for (right.items) |n| {
-    //     std.debug.print("R: {d}\n", .{n});
-    // }
 }
