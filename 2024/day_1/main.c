@@ -50,19 +50,11 @@ int main() {
 
     // distances
     int distances[ARRLEN] = {0};
-    for (int i = 0; i < pairs_amt; i++) {
-        // int distance = 0;
-        // if (left[i] > right[i]) distance = left[i] - right[i];
-        // if (right[i] > left[i]) distance = right[i] - left[i];
-        // distances[i] = distance;
-        distances[i] = abs(left[i] - right[i]);
-    }
+    for (int i = 0; i < pairs_amt; i++) distances[i] = abs(left[i] - right[i]);
 
     // total distance
     int total_distance = 0;
-    for (int i = 0; i < pairs_amt; i++) {
-        total_distance += distances[i];
-    }
+    for (int i = 0; i < pairs_amt; i++) total_distance += distances[i];
 
     printf("total_distance: %d\n", total_distance);
 }
