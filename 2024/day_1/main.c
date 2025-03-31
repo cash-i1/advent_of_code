@@ -1,46 +1,52 @@
 #include <assert.h>
 #include <stdio.h>
-
-struct pair { int a, b; };
+#include <stdbool.h>
 
 int main() {
     int left[128] = {0};
     int right[128] = {0};
 
-    // read in input
+    // read input
     FILE* f = fopen("input.txt", "r");
     assert(f != NULL);
 
     char line_buf[128] = {0};
-    int n_pairs = 0;
+    int pairs_amt = 0;
     while (fgets(line_buf, sizeof(line_buf), f)) {
-        sscanf(line_buf, "%d   %d", &left[n_pairs], &right[n_pairs]);
-        n_pairs++;
+        sscanf(line_buf, "%d   %d", &left[pairs_amt], &right[pairs_amt]);
+        pairs_amt++;
     }
+
+    // if there is a swap this iter
+    bool swapped = true;
 
     // sort
-    int swap_count = 0;
-    while (swap_count == 0) {
-        for (int i = 0; i < n_pairs; i++) {
-            printf("swapcount = %d\n", swap_count);
-            if (i+1 > n_pairs) break;
-            if (right[i+1] < right[i]) {
-                swap_count++;
-                int temp = right[i+1];
-                right[i+1] = right[i];
-                right[i] = temp;
-            }
+    while (swapped) {
+        swapped = false;
+        for (int i = 0; i < pairs_amt; i++) {
+            if (i+1 >= pairs_amt) break;
+
+            // if next is less than current ...
             if (left[i+1] < left[i]) {
-                swap_count++;
-                int temp = left[i+1];
-                left[i+1] = left[i];
-                left[i] = temp;
+                // swap [i] and [i+1]
+                int temp = left[i];  
+                left[i] = left[i+1];
+                left[i+1] = temp;
+                swapped = true;
             }
 
+            // same for right
+            if (right[i+1] < right[i]) {
+                int temp = right[i];  
+                right[i] = right[i+1];
+                right[i+1] = temp;
+                swapped = true;
+            }
         }
-        swap_count = 0;
     }
-    for (int j = 0; j < n_pairs; j++) {
-        printf("    %d, %d\n", left[j], right[j]);
+
+    // print pairs
+    for (int j = 0; j < pairs_amt; j++) {
+        printf("%d, %d\n", left[j], right[j]);
     }
 }
