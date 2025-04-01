@@ -11,7 +11,7 @@
 using namespace std;
 
 // check if v contains c
-inline bool contains(vector<int>& v, int c) {
+bool in(vector<int>& v, int c) {
     for (int e : v) if (e == c) return true;
     return false;
 }
@@ -35,7 +35,7 @@ int main() {
     // remove dups from left and add to new arr
     vector<int> left_dedup;
     for (int l : left) {
-        if (!contains(left_dedup, l)) {
+        if (!in(left_dedup, l)) {
             left_dedup.push_back(l);
         }
     }

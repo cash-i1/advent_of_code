@@ -1,0 +1,21 @@
+left: vector<int> = [3, 4, 2, 1, 3, 3]
+right: vector<int> = [4, 3, 5, 3, 9, 3]
+sim_score: int = 0
+
+# appearances of left numbers in right list
+# ap[<left number>] == <num appearances of left number in right list>
+ap: map<int>
+FOR l IN left
+    FOR r IN right
+        IF l = r
+            ap[l] += 1
+        END IF
+    END FOR
+END FOR
+
+FOR l IN left
+    sim_score += l * ap[l] 
+END FOR
+
+ASSERT sim_score = 31
+OUTPUT sim_score
