@@ -31,7 +31,8 @@ FOR l IN left
     #> l * o[l] -> 1 * o[1] -> 1 * 0 -> 0
     #> l = 3 : 3 * o[3] -> 3 * 2 -> 6
     n = l * o[l]
-    s += n
+    sim_score += n
 END FOR
 
 OUTPUT sim_score
+
