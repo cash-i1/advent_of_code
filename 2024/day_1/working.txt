@@ -1,0 +1,37 @@
+# results should be:
+# - 1 has 0 occurances
+# - 2 has 1 occurances
+# - 3 has 2 occurances
+
+left = [1, 2, 3]
+right = [2, 3, 3]
+
+# works by o[<number>] = <occ. of number>
+# initted to all 0's
+o = []
+
+FOR l IN left
+    #> l = 3
+    FOR r IN right
+        #> l = 3, r = 3
+
+        # comparing left[i] (l) to every elem. of right (r)
+        # this means that if l = r then r occured in left
+        IF l = r
+            #> o[l] = 1
+            #> o[2] = 1
+            #> o[3] = 2
+            o[l] += 1
+        END IF
+    END FOR
+END FOR
+
+sim_score = 0
+FOR l IN left
+    #> l * o[l] -> 1 * o[1] -> 1 * 0 -> 0
+    #> l = 3 : 3 * o[3] -> 3 * 2 -> 6
+    n = l * o[l]
+    s += n
+END FOR
+
+OUTPUT sim_score
